@@ -8,8 +8,6 @@ Given a list of sensitive keys, the tool will check for any keys in the JSON tha
 
 When filtering by "email", "address", "creditcard", see `keywordsToObfuscate` list in Application.java.
 
-```java
-
 ```json
 {
   "name": "Mark",
