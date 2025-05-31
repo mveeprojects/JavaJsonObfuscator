@@ -1,6 +1,6 @@
 # JavaJsonObfuscator
 
-JavaJsonObfuscator is a tool designed to obfuscate sensitive information from JSON files, making them less readable and more secure.
+JavaJsonObfuscator is a tool designed to obfuscate/omit sensitive information from JSON files, making them less readable and more secure.
 
 Given a list of sensitive keys, the tool will check for any keys in the JSON that contain these values (case-insensitive), and then remove these keys from the JSON output.
 
