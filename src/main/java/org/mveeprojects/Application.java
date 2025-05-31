@@ -17,7 +17,7 @@ public class Application {
 
     static ObjectMapper om = new ObjectMapper();
 
-    static List<String> keywordsToObfuscate = List.of(
+    static List<String> keywordsToObfuscateOrOmit = List.of(
             "email",
             "address",
             "creditcard"
@@ -48,8 +48,8 @@ public class Application {
             if (field.getValue().isObject() || field.getValue().isArray()) {
                 removeFieldsFromJson(field.getValue());
             } else {
-                keywordsToObfuscate.forEach(keywordToObfuscate -> {
-                    if (field.getKey().toLowerCase().contains(keywordToObfuscate.toLowerCase())) {
+                keywordsToObfuscateOrOmit.forEach(keywordToOmit -> {
+                    if (field.getKey().toLowerCase().contains(keywordToOmit.toLowerCase())) {
                         fields.remove();
                     }
                 });
@@ -67,7 +67,7 @@ public class Application {
             if (field.getValue().isObject() || field.getValue().isArray()) {
                 obfuscateFieldsInJson(field.getValue());
             } else {
-                keywordsToObfuscate.forEach(keywordToObfuscate -> {
+                keywordsToObfuscateOrOmit.forEach(keywordToObfuscate -> {
                     if (field.getKey().toLowerCase().contains(keywordToObfuscate.toLowerCase())) {
                         JsonNode obfuscatedNode = new TextNode("************");
                         field.setValue(obfuscatedNode);
