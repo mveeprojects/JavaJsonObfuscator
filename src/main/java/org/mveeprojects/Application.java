@@ -16,15 +16,18 @@ public class Application {
 
     static String jsonFileName = "libraryapi.json";
 
-    //    static String runMode = "OBFUSCATE";
-    static String runMode = "OMIT";
+        static String runMode = "OBFUSCATE";
+//    static String runMode = "OMIT";
 
     static ObjectMapper om = new ObjectMapper();
 
     static List<String> keywordsToObfuscateOrOmit = List.of(
+            "cardNumber",
+            "expiryDate",
             "email",
-            "address",
-            "paymentDetails"
+            "street",
+            "city",
+            "postalCode"
     );
 
     public static void main(String[] args) throws IOException {
@@ -45,14 +48,19 @@ public class Application {
             Map.Entry<String, JsonNode> field = fields.next();
 
             keywordsToObfuscateOrOmit.forEach(keywordToOmit -> {
-                if (field.getKey().toLowerCase().contains(keywordToOmit.toLowerCase())) {
+                if (field.getValue().isObject()) {
+                    obfuscateOrOmit(field.getValue());
+                } else if (field.getValue().isArray()) {
+                    for (JsonNode arrayElement : field.getValue()) {
+                        obfuscateOrOmit(arrayElement);
+                    }
+                } else if (field.getKey().toLowerCase().contains(keywordToOmit.toLowerCase())) {
                     if (runMode.equals("OMIT")) {
                         fields.remove();
                     } else {
                         JsonNode obfuscatedNode = new TextNode("************");
                         field.setValue(obfuscatedNode);
                     }
-
                 }
             });
         }

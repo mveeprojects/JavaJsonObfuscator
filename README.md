@@ -8,7 +8,7 @@ Given a list of sensitive keys, the tool will check for any keys in the JSON tha
 
 This example by default reads libraryapi.json from the resources folder, but you can also provide your own JSON file.
 
-When filtering by "email", "address", "paymentDetails" and setting `runMode = "OBFUSCATE"`.
+When filtering by "cardNumber", "expiryDate", "email", "street", "city", "postalCode" and setting `runMode = "OBFUSCATE"`.
 
 ```text
 JSON after processing of sensitive fields: 
@@ -16,15 +16,27 @@ JSON after processing of sensitive fields:
   "customerDetails" : {
     "customerId" : "C12345",
     "name" : "Jane Doe",
-    "email" : "jane.doe@example.com",
+    "email" : "************",
     "address" : {
-      "street" : "123 Main St",
-      "city" : "Springfield",
-      "postalCode" : "12345"
+      "street" : "************",
+      "city" : "************",
+      "postalCode" : "************"
     }
   },
-  "paymentDetails" : "************",
-  "alternativePaymentDetails" : "************",
+  "paymentDetails" : {
+    "cardType" : "Visa",
+    "cardNumber" : "************",
+    "expiryDate" : "************"
+  },
+  "alternativePaymentDetails" : [ {
+    "cardType" : "MasterCard",
+    "cardNumber" : "************",
+    "expiryDate" : "************"
+  }, {
+    "cardType" : "American Express",
+    "cardNumber" : "************",
+    "expiryDate" : "************"
+  } ],
   "rentalHistory" : [ {
     "bookId" : "B001",
     "title" : "Effective Java",
@@ -39,7 +51,7 @@ JSON after processing of sensitive fields:
 }
 ```
 
-When filtering by "email", "address", "creditcard" and setting `runMode = "OMIT"`.
+When filtering by "cardNumber", "expiryDate", "email", "street", "city", "postalCode" and setting `runMode = "OMIT"`.
 
 ```text
 JSON after processing of sensitive fields: 
@@ -47,13 +59,16 @@ JSON after processing of sensitive fields:
   "customerDetails" : {
     "customerId" : "C12345",
     "name" : "Jane Doe",
-    "email" : "jane.doe@example.com",
-    "address" : {
-      "street" : "123 Main St",
-      "city" : "Springfield",
-      "postalCode" : "12345"
-    }
+    "address" : { }
   },
+  "paymentDetails" : {
+    "cardType" : "Visa"
+  },
+  "alternativePaymentDetails" : [ {
+    "cardType" : "MasterCard"
+  }, {
+    "cardType" : "American Express"
+  } ],
   "rentalHistory" : [ {
     "bookId" : "B001",
     "title" : "Effective Java",
