@@ -4,38 +4,68 @@ JavaJsonObfuscator is a tool designed to obfuscate/omit sensitive information fr
 
 Given a list of sensitive keys, the tool will check for any keys in the JSON that contain these values (case-insensitive), and then remove or obfuscate these keys from the JSON output.
 
-### Example input:
+### Example operation
 
-```java
-String jsonString = "{\"name\":\"Mark\",\"contactDetails\":{\"streetAddress\":\"somewhere\",\"email\":\"mark@mveeprojects.com\"},\"creditCardNumber\":\"1234-5678-9012-3456\"}";
-```
+This example by default reads libraryapi.json from the resources folder, but you can also provide your own JSON file.
 
-As Json this look like::
-```json
-{
-  "name": "Mark",
-  "contactDetails": {
-    "streetAddress": "somewhere",
-    "email": "mark@mveeprojects.com"
-  },
-  "creditCardNumber": "1234-5678-9012-3456"
-}
-```
-
-### Example output:
-
-When filtering by "email", "address", "creditcard" and setting `runMode = "OBFUSCATE"`.
+When filtering by "email", "address", "paymentDetails" and setting `runMode = "OBFUSCATE"`.
 
 ```text
 JSON after processing of sensitive fields: 
-{"name":"Mark","contactDetails":{"streetAddress":"************","email":"************"},"creditCardNumber":"************"}
+{
+  "customerDetails" : {
+    "customerId" : "C12345",
+    "name" : "Jane Doe",
+    "email" : "jane.doe@example.com",
+    "address" : {
+      "street" : "123 Main St",
+      "city" : "Springfield",
+      "postalCode" : "12345"
+    }
+  },
+  "paymentDetails" : "************",
+  "alternativePaymentDetails" : "************",
+  "rentalHistory" : [ {
+    "bookId" : "B001",
+    "title" : "Effective Java",
+    "rentedOn" : "2024-05-01",
+    "returnedOn" : "2024-05-15"
+  }, {
+    "bookId" : "B002",
+    "title" : "Clean Code",
+    "rentedOn" : "2024-06-01",
+    "returnedOn" : null
+  } ]
+}
 ```
 
 When filtering by "email", "address", "creditcard" and setting `runMode = "OMIT"`.
 
 ```text
 JSON after processing of sensitive fields: 
-{"name":"Mark","contactDetails":{}}
+{
+  "customerDetails" : {
+    "customerId" : "C12345",
+    "name" : "Jane Doe",
+    "email" : "jane.doe@example.com",
+    "address" : {
+      "street" : "123 Main St",
+      "city" : "Springfield",
+      "postalCode" : "12345"
+    }
+  },
+  "rentalHistory" : [ {
+    "bookId" : "B001",
+    "title" : "Effective Java",
+    "rentedOn" : "2024-05-01",
+    "returnedOn" : "2024-05-15"
+  }, {
+    "bookId" : "B002",
+    "title" : "Clean Code",
+    "rentedOn" : "2024-06-01",
+    "returnedOn" : null
+  } ]
+}
 ```
 
 ### Sources

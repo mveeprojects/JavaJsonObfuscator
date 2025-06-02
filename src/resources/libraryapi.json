@@ -1,0 +1,43 @@
+{
+  "customerDetails": {
+    "customerId": "C12345",
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Springfield",
+      "postalCode": "12345"
+    }
+  },
+  "paymentDetails": {
+    "cardType": "Visa",
+    "cardNumber": "4111-1111-1111-1111",
+    "expiryDate": "12/26"
+  },
+  "alternativePaymentDetails": [
+    {
+      "cardType": "MasterCard",
+      "cardNumber": "5500-1234-5678-9010",
+      "expiryDate": "11/25"
+    },
+    {
+      "cardType": "American Express",
+      "cardNumber": "3782-8224-6310-005",
+      "expiryDate": "10/24"
+    }
+  ],
+  "rentalHistory": [
+    {
+      "bookId": "B001",
+      "title": "Effective Java",
+      "rentedOn": "2024-05-01",
+      "returnedOn": "2024-05-15"
+    },
+    {
+      "bookId": "B002",
+      "title": "Clean Code",
+      "rentedOn": "2024-06-01",
+      "returnedOn": null
+    }
+  ]
+}

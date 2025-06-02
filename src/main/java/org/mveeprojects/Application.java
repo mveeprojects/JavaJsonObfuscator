@@ -6,74 +6,55 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class Application {
 
-    static String runMode = "OBFUSCATE";
-//    static String runMode = "OMIT";
+    static String jsonFileName = "libraryapi.json";
+
+    //    static String runMode = "OBFUSCATE";
+    static String runMode = "OMIT";
 
     static ObjectMapper om = new ObjectMapper();
 
     static List<String> keywordsToObfuscateOrOmit = List.of(
             "email",
             "address",
-            "creditcard"
+            "paymentDetails"
     );
 
     public static void main(String[] args) throws IOException {
-        String jsonString = "{\"name\":\"Mark\",\"contactDetails\":{\"streetAddress\":\"somewhere\",\"email\":\"mark@mveeprojects.com\"},\"creditCardNumber\":\"1234-5678-9012-3456\"}";
+        String jsonString = new String(Files.readAllBytes(Paths.get("./src/resources/" + jsonFileName)));
         System.out.println("JSON after processing of sensitive fields: ");
-        System.out.println(getAllKeysInJsonUsingJsonNodeFieldNames(jsonString, om));
+        System.out.println(obfuscateOrOmitSensitiveFields(jsonString, om).toPrettyString());
     }
 
-    public static JsonNode getAllKeysInJsonUsingJsonNodeFieldNames(String jsonString, ObjectMapper mapper) throws JsonProcessingException {
+    public static JsonNode obfuscateOrOmitSensitiveFields(String jsonString, ObjectMapper mapper) throws JsonProcessingException {
         JsonNode rootNode = mapper.readTree(jsonString);
-
-        if (runMode.equals("OMIT")) {
-            return removeFieldsFromJson(rootNode);
-        } else {
-            return obfuscateFieldsInJson(rootNode);
-        }
+        return obfuscateOrOmit(rootNode);
     }
 
-    static JsonNode removeFieldsFromJson(JsonNode jsonNode) {
+    static JsonNode obfuscateOrOmit(JsonNode jsonNode) {
         Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
         while (fields.hasNext()) {
 
             Map.Entry<String, JsonNode> field = fields.next();
 
-            if (field.getValue().isObject() || field.getValue().isArray()) {
-                removeFieldsFromJson(field.getValue());
-            } else {
-                keywordsToObfuscateOrOmit.forEach(keywordToOmit -> {
-                    if (field.getKey().toLowerCase().contains(keywordToOmit.toLowerCase())) {
+            keywordsToObfuscateOrOmit.forEach(keywordToOmit -> {
+                if (field.getKey().toLowerCase().contains(keywordToOmit.toLowerCase())) {
+                    if (runMode.equals("OMIT")) {
                         fields.remove();
-                    }
-                });
-            }
-        }
-        return jsonNode;
-    }
-
-    static JsonNode obfuscateFieldsInJson(JsonNode jsonNode) {
-        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
-        while (fields.hasNext()) {
-
-            Map.Entry<String, JsonNode> field = fields.next();
-
-            if (field.getValue().isObject() || field.getValue().isArray()) {
-                obfuscateFieldsInJson(field.getValue());
-            } else {
-                keywordsToObfuscateOrOmit.forEach(keywordToObfuscate -> {
-                    if (field.getKey().toLowerCase().contains(keywordToObfuscate.toLowerCase())) {
+                    } else {
                         JsonNode obfuscatedNode = new TextNode("************");
                         field.setValue(obfuscatedNode);
                     }
-                });
-            }
+
+                }
+            });
         }
         return jsonNode;
     }
