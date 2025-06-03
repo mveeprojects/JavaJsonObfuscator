@@ -31,7 +31,7 @@ public class Application {
     );
 
     public static void main(String[] args) throws IOException {
-        String jsonString = new String(Files.readAllBytes(Paths.get("./src/resources/" + jsonFileName)));
+        String jsonString = new String(Files.readAllBytes(Paths.get("./src/main/resources/" + jsonFileName)));
         System.out.println("JSON after processing of sensitive fields: ");
         System.out.println(obfuscateOrOmitSensitiveFields(jsonString, om).toPrettyString());
     }
